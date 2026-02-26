@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* TanStack Table – compact, data-dense style */
+.ts-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-slate-200);
+  border-radius: 4px;
+  background: white;
+}
+.dark .ts-table-wrap {
+  border-color: #333;
+  background: #111;
+}
+
+.ts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.ts-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #fafafa;
+}
+.dark .ts-table thead {
+  background: #1a1a1a;
+}
+
+.ts-table th {
+  padding: 6px 10px;
+  text-align: left;
+  font-weight: 600;
+  color: #888;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--color-slate-200);
+  user-select: none;
+}
+.dark .ts-table th {
+  color: #666;
+  border-bottom-color: #333;
+}
+
+.ts-table th[data-sortable="true"] {
+  cursor: pointer;
+}
+.ts-table th[data-sortable="true"]:hover {
+  color: #111;
+}
+.dark .ts-table th[data-sortable="true"]:hover {
+  color: #ccc;
+}
+
+.ts-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 320px;
+}
+.dark .ts-table td {
+  border-bottom-color: #1e1e1e;
+}
+
+.ts-table tbody tr {
+  transition: background-color 0.1s;
+  position: relative;
+}
+.ts-table tbody tr:hover {
+  background: #f8f8f8;
+}
+.dark .ts-table tbody tr:hover {
+  background: #1e1e1e;
+}
+
+.ts-table tbody tr[data-selected="true"] {
+  background: #eff6ff;
+}
+.dark .ts-table tbody tr[data-selected="true"] {
+  background: #1a2332;
+}
+
+.ts-table tbody tr[data-clickable="true"] {
+  cursor: pointer;
+}
+
+.sort-indicator {
+  display: inline-block;
+  margin-left: 3px;
+  opacity: 0.5;
+  font-size: 8px;
+}
+
+/* Pagination */
+.ts-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: #888;
+  border-top: 1px solid #eee;
+}
+.dark .ts-pagination {
+  color: #666;
+  border-top-color: #333;
+}
+
+.ts-pagination button {
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+  background: white;
+  font-size: 11px;
+  cursor: pointer;
+}
+.dark .ts-pagination button {
+  border-color: #444;
+  background: #1a1a1a;
+  color: #aaa;
+}
+.ts-pagination button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.ts-pagination button:hover:not(:disabled) {
+  background: #f5f5f5;
+}
+.dark .ts-pagination button:hover:not(:disabled) {
+  background: #222;
+}
+
+/* Instant CSS tooltip */
+td:has(.css-tooltip) {
+  overflow: visible;
+}
+.css-tooltip {
+  position: relative;
+}
+.css-tooltip::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  background: #1a1a1a;
+  color: #eee;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.08s;
+  z-index: 20;
+}
+.dark .css-tooltip::after {
+  background: #e8e8e8;
+  color: #111;
+}
+.css-tooltip:hover::after {
+  opacity: 1;
+}
