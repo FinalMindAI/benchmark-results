@@ -1,0 +1,7 @@
+{
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/((?!assets|static-data\\.json).*)", "destination": "/index.html" }
+  ]
+}

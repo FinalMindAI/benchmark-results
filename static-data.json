@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-02-26T21:20:29.546Z",
+  "exportedAt": "2026-02-26T23:48:08.205Z",
   "catalog": {
     "providers": [
       {
@@ -340,10 +340,151 @@
         },
         "contextWindow": 1047576,
         "maxOutput": 32768
+      },
+      {
+        "provider": "openrouter",
+        "id": "microsoft/phi-4-reasoning-plus-04-30",
+        "displayName": "Phi 4 Reasoning Plus",
+        "family": "phi",
+        "supportsStructuredOutput": true,
+        "active": true,
+        "releaseDate": "2025-04-30",
+        "costPer1MTokens": {
+          "input": 0.07,
+          "output": 0.14
+        },
+        "contextWindow": 32768,
+        "maxOutput": 16384
+      },
+      {
+        "provider": "openrouter",
+        "id": "microsoft/mai-ds-r1",
+        "displayName": "MAI DS R1",
+        "family": "mai",
+        "supportsStructuredOutput": true,
+        "active": true,
+        "releaseDate": "2025-05-01",
+        "costPer1MTokens": {
+          "input": 0.7,
+          "output": 2.5
+        },
+        "contextWindow": 163840,
+        "maxOutput": 16000
+      },
+      {
+        "provider": "openrouter",
+        "id": "x-ai/grok-4",
+        "displayName": "Grok 4",
+        "family": "grok",
+        "supportsStructuredOutput": true,
+        "active": true,
+        "releaseDate": "2025-07-09",
+        "costPer1MTokens": {
+          "input": 3,
+          "output": 15
+        },
+        "contextWindow": 256000,
+        "maxOutput": 32000
+      },
+      {
+        "provider": "openrouter",
+        "id": "x-ai/grok-4.1-fast",
+        "displayName": "Grok 4.1 Fast",
+        "family": "grok",
+        "supportsStructuredOutput": true,
+        "active": true,
+        "releaseDate": "2025-12-01",
+        "costPer1MTokens": {
+          "input": 0.2,
+          "output": 0.5
+        },
+        "contextWindow": 2000000,
+        "maxOutput": 30000
+      },
+      {
+        "provider": "openrouter",
+        "id": "meta-llama/llama-4-maverick",
+        "displayName": "Llama 4 Maverick",
+        "family": "llama",
+        "supportsStructuredOutput": true,
+        "active": true,
+        "releaseDate": "2025-04-05",
+        "costPer1MTokens": {
+          "input": 0.15,
+          "output": 0.6
+        },
+        "contextWindow": 1048576,
+        "maxOutput": 16384
+      },
+      {
+        "provider": "openrouter",
+        "id": "mistralai/mistral-large-2512",
+        "displayName": "Mistral Large 3",
+        "family": "mistral",
+        "supportsStructuredOutput": true,
+        "active": true,
+        "releaseDate": "2025-12-01",
+        "costPer1MTokens": {
+          "input": 0.5,
+          "output": 1.5
+        },
+        "contextWindow": 262144,
+        "maxOutput": 32000
+      },
+      {
+        "provider": "openrouter",
+        "id": "deepseek/deepseek-r1",
+        "displayName": "DeepSeek R1",
+        "family": "deepseek",
+        "supportsStructuredOutput": true,
+        "active": true,
+        "releaseDate": "2025-01-20",
+        "costPer1MTokens": {
+          "input": 0.7,
+          "output": 2.5
+        },
+        "contextWindow": 64000,
+        "maxOutput": 16000
       }
     ]
   },
   "runs": [
+    {
+      "id": "da64e6d0-e26a-4a95-a4d5-0b58b9f527ff",
+      "status": "completed",
+      "dataset": "dataset-A",
+      "prompt_version": "v6",
+      "schema_version": "v1",
+      "harness": "oneshot.openrouter",
+      "provider": "openrouter",
+      "model": "meta-llama/llama-4-maverick",
+      "total_files": 19,
+      "completed_files": 19,
+      "avg_score": 0.9372469635627529,
+      "total_duration_ms": 47751,
+      "started_at": "2026-02-26T22:30:10.709Z",
+      "finished_at": "2026-02-26T22:30:58.460Z",
+      "total_input_tokens": 25316,
+      "total_output_tokens": 5299
+    },
+    {
+      "id": "c846c796-edd8-451d-83ca-fe911b61e377",
+      "status": "completed",
+      "dataset": "dataset-A",
+      "prompt_version": "v0",
+      "schema_version": "v1",
+      "harness": "oneshot.openrouter",
+      "provider": "openrouter",
+      "model": "meta-llama/llama-4-maverick",
+      "total_files": 19,
+      "completed_files": 19,
+      "avg_score": 0.651821862348178,
+      "total_duration_ms": 39807,
+      "started_at": "2026-02-26T22:27:31.096Z",
+      "finished_at": "2026-02-26T22:28:10.903Z",
+      "total_input_tokens": 18711,
+      "total_output_tokens": 4959
+    },
     {
       "id": "bdc3e060-14be-4642-8d64-3beb3279011c",
       "status": "completed",
@@ -796,6 +937,162 @@
     }
   ],
   "fileScores": {
+    "da64e6d0-e26a-4a95-a4d5-0b58b9f527ff": [
+      {
+        "file_id": "file-001",
+        "score": 0.9230769230769231
+      },
+      {
+        "file_id": "file-002",
+        "score": 0.8461538461538461
+      },
+      {
+        "file_id": "file-003",
+        "score": 0.8461538461538461
+      },
+      {
+        "file_id": "file-004",
+        "score": 1
+      },
+      {
+        "file_id": "file-005",
+        "score": 1
+      },
+      {
+        "file_id": "file-006",
+        "score": 1
+      },
+      {
+        "file_id": "file-007",
+        "score": 0.9230769230769231
+      },
+      {
+        "file_id": "file-008",
+        "score": 1
+      },
+      {
+        "file_id": "file-009",
+        "score": 1
+      },
+      {
+        "file_id": "file-010",
+        "score": 1
+      },
+      {
+        "file_id": "file-011",
+        "score": 0.8076923076923077
+      },
+      {
+        "file_id": "file-012",
+        "score": 0.8076923076923077
+      },
+      {
+        "file_id": "file-013",
+        "score": 1
+      },
+      {
+        "file_id": "file-014",
+        "score": 1
+      },
+      {
+        "file_id": "file-015",
+        "score": 0.9230769230769231
+      },
+      {
+        "file_id": "file-016",
+        "score": 0.9615384615384616
+      },
+      {
+        "file_id": "file-017",
+        "score": 0.8076923076923077
+      },
+      {
+        "file_id": "file-018",
+        "score": 1
+      },
+      {
+        "file_id": "file-019",
+        "score": 0.9615384615384616
+      }
+    ],
+    "c846c796-edd8-451d-83ca-fe911b61e377": [
+      {
+        "file_id": "file-001",
+        "score": 0.6538461538461539
+      },
+      {
+        "file_id": "file-002",
+        "score": 0.6538461538461539
+      },
+      {
+        "file_id": "file-003",
+        "score": 0.7307692307692307
+      },
+      {
+        "file_id": "file-004",
+        "score": 0.6923076923076923
+      },
+      {
+        "file_id": "file-005",
+        "score": 0.6538461538461539
+      },
+      {
+        "file_id": "file-006",
+        "score": 0.6923076923076923
+      },
+      {
+        "file_id": "file-007",
+        "score": 0.6153846153846154
+      },
+      {
+        "file_id": "file-008",
+        "score": 0.6923076923076923
+      },
+      {
+        "file_id": "file-009",
+        "score": 0.7692307692307693
+      },
+      {
+        "file_id": "file-010",
+        "score": 0.7692307692307693
+      },
+      {
+        "file_id": "file-011",
+        "score": 0.5384615384615384
+      },
+      {
+        "file_id": "file-012",
+        "score": 0.38461538461538464
+      },
+      {
+        "file_id": "file-013",
+        "score": 0.6538461538461539
+      },
+      {
+        "file_id": "file-014",
+        "score": 0.6923076923076923
+      },
+      {
+        "file_id": "file-015",
+        "score": 0.6923076923076923
+      },
+      {
+        "file_id": "file-016",
+        "score": 0.5769230769230769
+      },
+      {
+        "file_id": "file-017",
+        "score": 0.5769230769230769
+      },
+      {
+        "file_id": "file-018",
+        "score": 0.6923076923076923
+      },
+      {
+        "file_id": "file-019",
+        "score": 0.6538461538461539
+      }
+    ],
     "bdc3e060-14be-4642-8d64-3beb3279011c": [
       {
         "file_id": "file-001",
