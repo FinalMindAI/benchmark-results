@@ -68,4 +68,5 @@ export const api = {
   getRuns: async () => (await loadData()).runs,
   getCatalog: async () => (await loadData()).catalog,
   getFileScores: async () => (await loadData()).fileScores,
+  getExportedAt: async () => (await loadData()).exportedAt,
 };
