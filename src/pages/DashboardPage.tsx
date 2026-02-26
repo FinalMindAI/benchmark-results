@@ -46,12 +46,6 @@ function formatCost(run: RunRow, model: CatalogModel | undefined): string {
   return `$${cost.toFixed(2)}`;
 }
 
-function truncatePrompt(text: string | undefined, max = 72) {
-  if (!text) return "\u2014";
-  if (text.length <= max) return text;
-  return `${text.slice(0, max).trimEnd()}...`;
-}
-
 function StatusBadge({ status }: { status: string }) {
   const color =
     status === "completed"
@@ -151,13 +145,6 @@ export function DashboardPage() {
       { accessorKey: "provider", header: "Provider", enableColumnFilter: true, size: 130 },
       { accessorKey: "dataset", header: "Dataset", enableColumnFilter: true, size: 140 },
       { accessorKey: "prompt_version", header: "Prompt", enableColumnFilter: true, size: 95 },
-      {
-        accessorKey: "prompt_preview",
-        header: "Prompt Text",
-        cell: ({ getValue }) => truncatePrompt(getValue() as string, 100),
-        enableColumnFilter: false,
-        size: 280,
-      },
       { accessorKey: "schema_version", header: "Schema", enableColumnFilter: true, size: 90 },
       {
         accessorKey: "status",

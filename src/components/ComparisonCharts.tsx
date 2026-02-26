@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -15,7 +15,7 @@ import {
   Line,
 } from "recharts";
 import { useTheme } from "../hooks/useTheme";
-import type { RunRow, CatalogModel } from "../api";
+import { api, type RunRow, type CatalogModel, type FileResultRow } from "../api";
 import { getModelLogoUrl } from "./ModelBadge";
 
 // Bloomberg-style muted palette
@@ -156,50 +156,97 @@ function DurationComparisonChart({ runs, isDark }: { runs: RunRow[]; isDark: boo
   );
 }
 
-function CompletionRateChart({ runs, isDark }: { runs: RunRow[]; isDark: boolean }) {
-  const data = runs.map((r, i) => ({
-    name: getLabel(r),
-    rate: r.total_files > 0 ? Math.round((r.completed_files / r.total_files) * 100) : 0,
-    fill: CHART_COLORS[i % CHART_COLORS.length],
-  }));
+function scoreColor(score: number, isDark: boolean): string {
+  if (score >= 1) return isDark ? "#166534" : "#bbf7d0";
+  if (score >= 0.9) return isDark ? "#14532d" : "#dcfce7";
+  if (score >= 0.75) return isDark ? "#422006" : "#fef3c7";
+  if (score >= 0.5) return isDark ? "#7c2d12" : "#fed7aa";
+  return isDark ? "#7f1d1d" : "#fecaca";
+}
 
-  const c = chartColors(isDark);
+function PerFileHeatmap({
+  runs,
+  filesByRun,
+  isDark,
+}: {
+  runs: RunRow[];
+  filesByRun: Map<string, FileResultRow[]>;
+  isDark: boolean;
+}) {
+  const allFileIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const files of filesByRun.values()) {
+      for (const f of files) ids.add(f.file_id);
+    }
+    return Array.from(ids).sort();
+  }, [filesByRun]);
+
+  if (allFileIds.length === 0) return null;
+
+  const scoreMap = useMemo(() => {
+    const map = new Map<string, Map<string, number>>();
+    for (const [runId, files] of filesByRun) {
+      const inner = new Map<string, number>();
+      for (const f of files) inner.set(f.file_id, f.score);
+      map.set(runId, inner);
+    }
+    return map;
+  }, [filesByRun]);
+
+  const borderColor = isDark ? "#333" : "#e0e0e0";
 
   return (
     <div>
       <h3 className="text-xs font-semibold mb-2 uppercase tracking-wider text-gray-500 dark:text-gray-500">
-        Completion Rate
+        Per-File Scores
       </h3>
-      <ResponsiveContainer width="100%" height={240}>
-        <BarChart data={data} margin={{ top: 4, right: 12, bottom: 36, left: 4 }} barSize={32}>
-          <CartesianGrid stroke={c.grid} vertical={false} strokeDasharray="" />
-          <XAxis
-            dataKey="name"
-            tick={{ fill: c.text, fontSize: 10 }}
-            angle={-20}
-            textAnchor="end"
-            height={50}
-            axisLine={{ stroke: c.grid }}
-            tickLine={false}
-          />
-          <YAxis
-            domain={[0, 100]}
-            tick={{ fill: c.text, fontSize: 10 }}
-            axisLine={false}
-            tickLine={false}
-            tickFormatter={(v) => `${v}%`}
-          />
-          <Tooltip
-            contentStyle={c.tooltip}
-            formatter={(value: number | undefined) => [`${value ?? 0}%`, "Completion"]}
-          />
-          <Bar dataKey="rate" radius={0}>
-            {data.map((entry, i) => (
-              <Cell key={i} fill={entry.fill} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ borderCollapse: "collapse", fontSize: 10, width: "100%" }}>
+          <thead>
+            <tr>
+              <th style={{ padding: "3px 6px", textAlign: "left", color: isDark ? "#888" : "#666", borderBottom: `1px solid ${borderColor}`, position: "sticky", left: 0, background: isDark ? "#111" : "#fff", zIndex: 1 }}>
+                Model
+              </th>
+              {allFileIds.map((fid) => (
+                <th key={fid} style={{ padding: "3px 4px", textAlign: "center", color: isDark ? "#888" : "#666", borderBottom: `1px solid ${borderColor}`, whiteSpace: "nowrap" }}>
+                  {fid}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {runs.map((run) => {
+              const scores = scoreMap.get(run.id);
+              return (
+                <tr key={run.id}>
+                  <td style={{ padding: "3px 6px", whiteSpace: "nowrap", borderBottom: `1px solid ${borderColor}`, position: "sticky", left: 0, background: isDark ? "#111" : "#fff", zIndex: 1, color: isDark ? "#ccc" : "#333" }}>
+                    {getLabel(run)}
+                  </td>
+                  {allFileIds.map((fid) => {
+                    const score = scores?.get(fid);
+                    const pct = score != null ? Math.round(score * 100) : null;
+                    return (
+                      <td
+                        key={fid}
+                        style={{
+                          padding: "3px 4px",
+                          textAlign: "center",
+                          borderBottom: `1px solid ${borderColor}`,
+                          background: score != null ? scoreColor(score, isDark) : "transparent",
+                          color: isDark ? "#eee" : "#111",
+                          fontWeight: score != null && score >= 1 ? 600 : 400,
+                        }}
+                      >
+                        {pct != null ? `${pct}` : "\u2014"}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
@@ -498,7 +545,7 @@ function SummaryCards({ runs }: { runs: RunRow[] }) {
       <div className="bg-white dark:bg-[#111] px-3 py-2">
         <div className="text-[9px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-600">Fastest</div>
         <div className="text-lg font-bold mt-0.5 text-gray-900 dark:text-gray-100">
-          {fastest.total_duration_ms != null ? `${(fastest.total_duration_ms / 1000).toFixed(1)}s` : "—"}
+          {fastest.total_duration_ms != null ? `${(fastest.total_duration_ms / 1000).toFixed(1)}s` : "\u2014"}
         </div>
         <div className="text-[10px] text-gray-500 dark:text-gray-500 truncate">{getLabel(fastest)}</div>
       </div>
@@ -520,6 +567,19 @@ export function ComparisonCharts({
 }) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+
+  const [filesByRun, setFilesByRun] = useState<Map<string, FileResultRow[]>>(new Map());
+
+  useEffect(() => {
+    api.getFileScores().then((allScores) => {
+      const map = new Map<string, FileResultRow[]>();
+      const runIds = new Set(runs.map((r) => r.id));
+      for (const [runId, files] of Object.entries(allScores)) {
+        if (runIds.has(runId)) map.set(runId, files);
+      }
+      setFilesByRun(map);
+    }).catch(() => {});
+  }, [runs]);
 
   return (
     <div className="space-y-3 mt-3">
@@ -547,12 +607,15 @@ export function ComparisonCharts({
           <PerformanceByReleaseDateChart runs={runs} modelMap={modelMap} isDark={isDark} />
         </div>
         <div className="bg-white dark:bg-[#111] p-3">
-          <CompletionRateChart runs={runs} isDark={isDark} />
-        </div>
-        <div className="bg-white dark:bg-[#111] p-3">
           <CostEfficiencyChart runs={runs} modelMap={modelMap} isDark={isDark} />
         </div>
       </div>
+
+      {filesByRun.size > 0 && (
+        <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] p-3">
+          <PerFileHeatmap runs={runs} filesByRun={filesByRun} isDark={isDark} />
+        </div>
+      )}
     </div>
   );
 }

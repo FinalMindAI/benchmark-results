@@ -43,10 +43,16 @@ export type Catalog = {
   models: CatalogModel[];
 };
 
+export type FileResultRow = {
+  file_id: string;
+  score: number;
+};
+
 type StaticData = {
   exportedAt: string;
   catalog: Catalog;
   runs: RunRow[];
+  fileScores: Record<string, FileResultRow[]>;
 };
 
 let cached: StaticData | null = null;
@@ -61,4 +67,5 @@ async function loadData(): Promise<StaticData> {
 export const api = {
   getRuns: async () => (await loadData()).runs,
   getCatalog: async () => (await loadData()).catalog,
+  getFileScores: async () => (await loadData()).fileScores,
 };
